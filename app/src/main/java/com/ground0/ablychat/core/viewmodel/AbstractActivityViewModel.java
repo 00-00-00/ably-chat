@@ -1,5 +1,6 @@
 package com.ground0.ablychat.core.viewmodel;
 
+import android.os.Bundle;
 import com.ground0.ablychat.core.components.BaseActivity;
 import com.ground0.ablychat.core.components.BaseApplication;
 
@@ -16,5 +17,13 @@ public abstract class AbstractActivityViewModel<T extends BaseActivity>
 
   protected T getActivity() {
     return registeredView == null ? null : registeredView.get();
+  }
+
+  public void onRestoreState(Bundle savedInstanceState) {
+
+  }
+
+  public void onSaveState(Bundle outstate) {
+
   }
 }

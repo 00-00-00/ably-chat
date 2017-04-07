@@ -1,5 +1,6 @@
 package com.ground0.ablychat.viewmodel;
 
+import android.view.View;
 import com.ground0.model.MessageThread;
 
 /**
@@ -8,7 +9,11 @@ import com.ground0.model.MessageThread;
 
 public class MessageThreadViewModelFactory {
 
-  public MessageThreadItemViewModel createItemViewModel(MessageThread messageThread) {
+  MessageThreadViewModelHandler handler;
+
+  public MessageThreadItemViewModel createItemViewModel(MessageThreadViewModelHandler handler,
+      MessageThread messageThread) {
+    this.handler = handler;
     return new MessageThreadItemViewModel(messageThread);
   }
 
@@ -27,5 +32,13 @@ public class MessageThreadViewModelFactory {
     public void setMessageThread(MessageThread messageThread) {
       this.messageThread = messageThread;
     }
+
+    public void openDetail(View view) {
+      handler.openDetail(messageThread);
+    }
+  }
+
+  public interface MessageThreadViewModelHandler {
+    void openDetail(MessageThread messageThread);
   }
 }

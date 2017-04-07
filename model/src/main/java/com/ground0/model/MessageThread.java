@@ -54,6 +54,15 @@ public class MessageThread extends RealmObject {
     return message.getFromUser().toString() + message.getToUser().toString();
   }
 
+  public static String generateId(User fromUser, User toUser) {
+    if (fromUser == null || toUser == null) return "";
+    return fromUser.toString() + toUser.toString();
+  }
+
+  public static String generateId(String fromUser, String toUser) {
+    return fromUser + toUser;
+  }
+
   public void readFrom(Message message) {
     setFromUser(message.getFromUser());
     setId(message.getThreadId());

@@ -26,6 +26,8 @@
 
     </activity>
 
+    <activity android:name=".activity.ChatActivity"/>
+
     <service
         android:name=".service.ChatService"
         android:exported="false"/>

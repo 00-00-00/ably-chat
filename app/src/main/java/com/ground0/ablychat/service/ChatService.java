@@ -33,13 +33,17 @@ public class ChatService extends BaseService {
   }
 
   private void initAbly() throws AblyException {
-    //if (getSelf() == null) return;
+    if (getSelf() == null) return;
     AblyRealtime ablyRealtime = new AblyRealtime(Constants.ABLY_API_KEY);
     Channel channel = ablyRealtime.channels.get(getSelf().getUserName());
     channel.subscribe(message -> {
       Log.d(getClass().getSimpleName(), "Message received:" + message.data);
       try {
+
         Message messagePOJO = objectMapper.readValue(message.data.toString(), Message.class);
+        messagePOJO.setReceivedTimeStamp(System.currentTimeMillis());
+        messagePOJO.setToUser(getBaseApplication().getSelf());
+
         Log.d(getClass().getSimpleName(), "Saving message to db");
         repository.saveMessage(messagePOJO)
             .subscribeOn(AndroidSchedulers.mainThread())

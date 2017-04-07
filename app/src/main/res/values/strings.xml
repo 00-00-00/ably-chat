@@ -4,4 +4,6 @@
   <string name="first_name">First name</string>
   <string name="last_name">Last name</string>
   <string name="sign_in">Sign in</string>
+  <string name="enter_message">Enter message</string>
+  <string name="start_chat">Start chat</string>
 </resources>

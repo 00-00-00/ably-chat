@@ -1,4 +1,4 @@
-package adapter;
+package com.ground0.ablychat.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +19,13 @@ public class ChatListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
   private List<MessageThread> data;
   private MessageThreadViewModelFactory messageThreadViewModelFactory;
+  MessageThreadViewModelFactory.MessageThreadViewModelHandler handler;
 
-  public ChatListRecyclerViewAdapter(List<MessageThread> data) {
+  public ChatListRecyclerViewAdapter(
+      MessageThreadViewModelFactory.MessageThreadViewModelHandler handler,
+      List<MessageThread> data) {
     this.data = data;
+    this.handler = handler;
     messageThreadViewModelFactory = new MessageThreadViewModelFactory();
   }
 
@@ -34,7 +38,7 @@ public class ChatListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     ItemThreadBinding itemThreadBinding = DataBindingUtil.bind(holder.itemView);
     itemThreadBinding.setViewModel(
-        messageThreadViewModelFactory.createItemViewModel(data.get(position)));
+        messageThreadViewModelFactory.createItemViewModel(handler, data.get(position)));
   }
 
   @Override public int getItemCount() {

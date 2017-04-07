@@ -1,6 +1,6 @@
 package com.ground0.ablychat.viewmodel;
 
-import adapter.ChatListRecyclerViewAdapter;
+import com.ground0.ablychat.adapter.ChatListRecyclerViewAdapter;
 import com.ground0.ablychat.activity.ChatListActivity;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
 import com.ground0.model.MessageThread;
@@ -13,14 +13,15 @@ import java.util.List;
  * Created by zer0 on 7/4/17.
  */
 
-public class ChatListActivityViewModel extends AbstractActivityViewModel<ChatListActivity> {
+public class ChatListActivityViewModel extends AbstractActivityViewModel<ChatListActivity>
+    implements MessageThreadViewModelFactory.MessageThreadViewModelHandler {
 
   private ChatListRecyclerViewAdapter adapter;
   private List<MessageThread> messageThreads = new ArrayList<>();
   private Repository repository;
 
   public ChatListRecyclerViewAdapter getAdapter() {
-    if (adapter == null) adapter = new ChatListRecyclerViewAdapter(messageThreads);
+    if (adapter == null) adapter = new ChatListRecyclerViewAdapter(this, messageThreads);
     return adapter;
   }
 
@@ -30,12 +31,15 @@ public class ChatListActivityViewModel extends AbstractActivityViewModel<ChatLis
     fetchData();
   }
 
+  @Override public void openDetail(MessageThread messageThread) {
+    getActivity().nextActivity(messageThread.getId(), messageThread.getToUser().getUserName());
+  }
+
   private void fetchData() {
     repository.getChatList(getApplication().getSelf().getUserName()).subscribe(messageThreads1 -> {
       messageThreads.clear();
       messageThreads.addAll(messageThreads1);
-      if (adapter != null)
-      adapter.notifyDataSetChanged();
+      if (adapter != null) adapter.notifyDataSetChanged();
     });
   }
 }

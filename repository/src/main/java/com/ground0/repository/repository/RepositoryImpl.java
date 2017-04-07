@@ -3,6 +3,7 @@ package com.ground0.repository.repository;
 import android.content.Context;
 import com.ground0.model.Message;
 import com.ground0.model.MessageThread;
+import com.ground0.model.User;
 import io.realm.RealmResults;
 import rx.Observable;
 
@@ -36,5 +37,9 @@ public class RepositoryImpl implements Repository {
 
   @Override public Observable<RealmResults<MessageThread>> getChatList(String selfId) {
     return repository.getChatList(selfId);
+  }
+
+  @Override public Observable<User> getUser(String userName) {
+    return repository.getUser(userName);
   }
 }
