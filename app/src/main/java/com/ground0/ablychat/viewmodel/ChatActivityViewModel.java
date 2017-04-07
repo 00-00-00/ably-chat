@@ -21,6 +21,7 @@ import io.ably.lib.realtime.Channel;
 import io.ably.lib.realtime.CompletionListener;
 import io.ably.lib.types.AblyException;
 import io.ably.lib.types.ErrorInfo;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,7 +46,6 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
     super.afterRegister();
     repository = RepositoryImpl.getInstance(getActivity());
     this.objectMapper = new ObjectMapper();
-    fetchMessages();
   }
 
   @Override public void onRestoreState(Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
           }
           this.toUser = user;
         });
+    fetchMessages();
   }
 
   @Override public void onSaveState(Bundle outstate) {
@@ -91,8 +92,8 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
         .setMessageId(time)
         .setSendTimeStamp(time)
         .setThreadId(MessageThread.generateId(toUser, getApplication().getSelf()))
-        .setFromUser(toUser)
-        .setToUser(getApplication().getSelf())
+        .setToUser(toUser)
+        .setFromUser(getApplication().getSelf())
         .build();
     pushMessage(message);
     this.message.set("");
@@ -106,12 +107,17 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
       channel.publish("message", messageString, new CompletionListener() {
         @Override public void onSuccess() {
           Log.d(getClass().getSimpleName(), "Message sent");
-          repository.saveMessage(message)
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribeOn(AndroidSchedulers.mainThread())
-              .subscribe(aLong -> {
-                Log.d(getClass().getSimpleName(), "Message saved");
-              });
+          try {
+            repository.saveMessage(getApplication().getSelf().getUserName(),
+                objectMapper.readValue(messageString, Message.class))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                  Log.d(getClass().getSimpleName(), "Message saved");
+                });
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
         }
 
         @Override public void onError(ErrorInfo reason) {

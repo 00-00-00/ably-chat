@@ -27,8 +27,8 @@ public class RepositoryImpl implements Repository {
     return instance;
   }
 
-  @Override public Observable<Long> saveMessage(Message message) {
-    return repository.saveMessage(message);
+  @Override public Observable<Long> saveMessage(String selfId, Message message) {
+    return repository.saveMessage(selfId, message);
   }
 
   @Override public Observable<RealmResults<Message>> getMessages(String threadId) {

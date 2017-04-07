@@ -12,7 +12,7 @@ import rx.Observable;
 
 public interface Repository {
 
-  public Observable<Long> saveMessage(Message message);
+  public Observable<Long> saveMessage(String selfId, Message message);
 
   public Observable<RealmResults<Message>> getMessages(String threadId);
 

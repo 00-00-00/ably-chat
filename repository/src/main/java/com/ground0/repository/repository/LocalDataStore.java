@@ -24,7 +24,7 @@ public class LocalDataStore implements Repository {
     Realm.setDefaultConfiguration(realmConfiguration);*/
   }
 
-  @Override public Observable<Long> saveMessage(final Message message) {
+  @Override public Observable<Long> saveMessage(String selfId, final Message message) {
 
     Log.d(getClass().getSimpleName(), "Saving message");
 
@@ -33,6 +33,12 @@ public class LocalDataStore implements Repository {
 
     MessageThread messageThread = new MessageThread();
     messageThread.readFrom(message);
+    //If message is not from self then store then store the address of thread from message; (i.e. inverted)
+    if (!message.getFromUser().getUserName().equals(selfId)) {
+      messageThread.setFromUser(message.getToUser());
+      messageThread.setToUser(message.getFromUser());
+    }
+
     realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(messageThread));
     realm.close();
 
@@ -51,8 +57,8 @@ public class LocalDataStore implements Repository {
   @Override public Observable<RealmResults<MessageThread>> getChatList(String selfId) {
     Realm realm = Realm.getDefaultInstance();
     return realm.where(MessageThread.class)
-        .equalTo("fromUser.userName", selfId)
-        .findAllSorted("lastMessage.receivedTimeStamp")
+        .distinct("id")
+        .sort("lastMessage.receivedTimeStamp")
         .asObservable();
   }
 

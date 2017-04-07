@@ -47,7 +47,7 @@ public class ChatService extends BaseService {
         messagePOJO.setThreadId(MessageThread.generateId(messagePOJO));
 
         Log.d(getClass().getSimpleName(), "Saving message to db");
-        repository.saveMessage(messagePOJO)
+        repository.saveMessage(getSelf().getUserName(), messagePOJO)
             .subscribeOn(AndroidSchedulers.mainThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(aLong -> {
