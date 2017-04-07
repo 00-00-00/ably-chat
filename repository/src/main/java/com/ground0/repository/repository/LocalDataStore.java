@@ -1,6 +1,7 @@
 package com.ground0.repository.repository;
 
 import android.content.Context;
+import android.util.Log;
 import com.ground0.model.Message;
 import com.ground0.model.MessageThread;
 import io.realm.Realm;
@@ -14,7 +15,6 @@ import rx.Observable;
 public class LocalDataStore implements Repository {
 
   public LocalDataStore(Context context) {
-
     Realm.init(context);
     /*RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().name(Realm.DEFAULT_REALM_NAME)
         .schemaVersion(0)
@@ -24,17 +24,20 @@ public class LocalDataStore implements Repository {
   }
 
   @Override public Observable<Long> saveMessage(final Message message) {
-    Realm realm = Realm.getDefaultInstance();
 
+    Log.d(getClass().getSimpleName(), "Saving message");
+
+    message.setReceivedTimeStamp(System.currentTimeMillis());
     message.setThreadId(MessageThread.generateId(message));
 
-    realm.executeTransaction(realm1 -> realm1.copyToRealm(message));
+    Realm realm = Realm.getDefaultInstance();
+    realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(message));
 
-    MessageThread messageThread = realm.createObject(MessageThread.class);
+    MessageThread messageThread = new MessageThread();
     messageThread.readFrom(message);
-
     realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(messageThread));
     realm.close();
+
     return Observable.just(message.getMessageId());
   }
 

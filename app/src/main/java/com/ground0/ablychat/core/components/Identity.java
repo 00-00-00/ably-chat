@@ -1,6 +1,6 @@
 package com.ground0.ablychat.core.components;
 
-import com.bluelinelabs.logansquare.internal.objectmappers.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ground0.model.User;
 import com.pixplicity.easyprefs.library.Prefs;
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.io.IOException;
 
 public abstract class Identity {
 
-  ObjectMapper objectMapper;
   private static final String TAG = "AppIdentity";
+  ObjectMapper objectMapper = new ObjectMapper();
 
   protected void addOrUpdateIdentity(String key, Object value) {
     try {
-      Prefs.putString(key, objectMapper.serialize(value));
+      Prefs.putString(key, objectMapper.writeValueAsString(value));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -26,7 +26,7 @@ public abstract class Identity {
     try {
       String patientString = Prefs.getString(key, null);
       if (patientString == null) return null;
-      return (User) objectMapper.parse(patientString);
+      return objectMapper.readValue(patientString, User.class);
     } catch (IOException e) {
       return null;
     }

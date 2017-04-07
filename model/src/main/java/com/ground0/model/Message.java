@@ -1,5 +1,6 @@
 package com.ground0.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -7,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by zer0 on 6/4/17.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Message extends RealmObject {
 
   @PrimaryKey Long messageId;
