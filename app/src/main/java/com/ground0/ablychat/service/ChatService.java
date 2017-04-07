@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ground0.ablychat.core.components.BaseService;
 import com.ground0.ablychat.util.Constants;
 import com.ground0.model.Message;
+import com.ground0.model.MessageThread;
 import com.ground0.repository.repository.Repository;
 import com.ground0.repository.repository.RepositoryImpl;
 import io.ably.lib.realtime.AblyRealtime;
@@ -43,6 +44,7 @@ public class ChatService extends BaseService {
         Message messagePOJO = objectMapper.readValue(message.data.toString(), Message.class);
         messagePOJO.setReceivedTimeStamp(System.currentTimeMillis());
         messagePOJO.setToUser(getBaseApplication().getSelf());
+        messagePOJO.setThreadId(MessageThread.generateId(messagePOJO));
 
         Log.d(getClass().getSimpleName(), "Saving message to db");
         repository.saveMessage(messagePOJO)

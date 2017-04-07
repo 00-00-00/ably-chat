@@ -15,6 +15,11 @@ public class LoginActivityViewModel extends AbstractActivityViewModel<LoginActiv
 
   private User user = new User();
 
+  @Override public void afterRegister() {
+    super.afterRegister();
+    checkIfLoggedIn();
+  }
+
   public void signIn(@Nullable View view) {
     // TODO: 7/4/17 Add static validators and binding adapters
     if (StringUtils.isNotBlank(user.getUserName())) {
@@ -23,6 +28,13 @@ public class LoginActivityViewModel extends AbstractActivityViewModel<LoginActiv
         user.setLastName("1");
       }
       getApplication().setSelf(user);
+      getActivity().nextActivity();
+    }
+  }
+
+  private void checkIfLoggedIn() {
+    if (getApplication().getSelf() != null && StringUtils.isNotBlank(
+        getApplication().getSelf().getUserName())) {
       getActivity().nextActivity();
     }
   }

@@ -1,7 +1,7 @@
 package com.ground0.ablychat.viewmodel;
 
-import com.ground0.ablychat.adapter.ChatListRecyclerViewAdapter;
 import com.ground0.ablychat.activity.ChatListActivity;
+import com.ground0.ablychat.adapter.ChatListRecyclerViewAdapter;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
 import com.ground0.model.MessageThread;
 import com.ground0.repository.repository.Repository;

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.ContextWrapper;
 import com.ground0.model.User;
 import com.pixplicity.easyprefs.library.Prefs;
+import io.realm.Realm;
 
 /**
  * Created by zer0 on 6/4/17.
@@ -15,6 +16,7 @@ public class BaseApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+    Realm.init(this);
     initPrefs();
   }
 

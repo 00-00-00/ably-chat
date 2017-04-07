@@ -7,10 +7,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ground0.ablychat.activity.ChatActivity;
 import com.ground0.ablychat.adapter.ChatAdapter;
+import com.ground0.ablychat.core.binding.BindableString;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
 import com.ground0.ablychat.util.Constants;
 import com.ground0.model.Message;
 import com.ground0.model.MessageBuilder;
+import com.ground0.model.MessageThread;
 import com.ground0.model.User;
 import com.ground0.repository.repository.Repository;
 import com.ground0.repository.repository.RepositoryImpl;
@@ -21,6 +23,7 @@ import io.ably.lib.types.AblyException;
 import io.ably.lib.types.ErrorInfo;
 import java.util.ArrayList;
 import java.util.List;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by zer0 on 7/4/17.
@@ -36,7 +39,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
   private ObjectMapper objectMapper;
 
   private List<Message> messages = new ArrayList<>();
-  private String message = "";
+  private BindableString message = new BindableString();
 
   @Override public void afterRegister() {
     super.afterRegister();
@@ -49,13 +52,16 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
     super.onRestoreState(savedInstanceState);
     threadId = savedInstanceState.getString(ChatActivity.CHAT_ACTIVITY_THREAD_ID);
     String userName = savedInstanceState.getString(ChatActivity.CHAT_ACTIVITY_TO_USERNAME);
-    repository.getUser(userName).subscribe(user -> {
-      if (user == null) {
-        user = new User();
-        user.setUserName(savedInstanceState.getString(ChatActivity.CHAT_ACTIVITY_TO_USERNAME));
-      }
-      this.toUser = user;
-    });
+    repository.getUser(userName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(user -> {
+          if (user == null) {
+            user = new User();
+            user.setUserName(savedInstanceState.getString(ChatActivity.CHAT_ACTIVITY_TO_USERNAME));
+          }
+          this.toUser = user;
+        });
   }
 
   @Override public void onSaveState(Bundle outstate) {
@@ -81,13 +87,15 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
 
   public void sendMessage(View view) {
     Long time = System.currentTimeMillis();
-    Message message = new MessageBuilder().setMessage(this.message)
+    Message message = new MessageBuilder().setMessage(this.message.get())
         .setMessageId(time)
         .setSendTimeStamp(time)
+        .setThreadId(MessageThread.generateId(toUser, getApplication().getSelf()))
         .setFromUser(toUser)
         .setToUser(getApplication().getSelf())
         .build();
     pushMessage(message);
+    this.message.set("");
   }
 
   private void pushMessage(Message message) {
@@ -98,9 +106,12 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
       channel.publish("message", messageString, new CompletionListener() {
         @Override public void onSuccess() {
           Log.d(getClass().getSimpleName(), "Message sent");
-          repository.saveMessage(message).subscribe(aLong -> {
-            Log.d(getClass().getSimpleName(), "Message saved");
-          });
+          repository.saveMessage(message)
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribeOn(AndroidSchedulers.mainThread())
+              .subscribe(aLong -> {
+                Log.d(getClass().getSimpleName(), "Message saved");
+              });
         }
 
         @Override public void onError(ErrorInfo reason) {
@@ -114,11 +125,11 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
     }
   }
 
-  public String getMessage() {
+  public BindableString getMessage() {
     return message;
   }
 
-  public void setMessage(String message) {
+  public void setMessage(BindableString message) {
     this.message = message;
   }
 }

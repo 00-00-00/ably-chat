@@ -26,6 +26,11 @@ public class MessageBuilder {
     return this;
   }
 
+  public MessageBuilder setThreadId(String threadId) {
+    this.message.setThreadId(threadId);
+    return this;
+  }
+
   public MessageBuilder setToUser(User toUser) {
     this.message.setToUser(toUser);
     return this;
