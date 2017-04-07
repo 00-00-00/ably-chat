@@ -2,13 +2,13 @@ package com.ground0.ablychat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ground0.ablychat.core.components.BaseActivity;
 import com.ground0.ablychat.service.ChatService;
 import com.ground0.ablychat.util.Constants;
 import com.ground0.model.Message;
@@ -20,10 +20,14 @@ import io.ably.lib.types.AblyException;
 import io.ably.lib.types.ErrorInfo;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
   @BindView(R.id.text) TextView textView;
   ObjectMapper objectMapper = new ObjectMapper();
+
+  @Override public void registerViewModel() {
+
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,14 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
   public String getTestMessage() {
     User user = new User();
+    user.setUserName(user.getFullName());
     user.setFirstName("Don");
-    user.setId(1L);
     user.setLastName("Corleone");
 
     Message message = new Message();
 
     message.setMessageId(System.currentTimeMillis());
     message.setToUser(user);
+    message.setFromUser(getBaseApplication().getSelf());
     message.setMessageId(3L);
     message.setSendTimeStamp(System.currentTimeMillis());
     message.setMessage("Test Message");

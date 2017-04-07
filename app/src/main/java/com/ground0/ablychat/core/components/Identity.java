@@ -12,7 +12,7 @@ import java.io.IOException;
 public abstract class Identity {
 
   private static final String TAG = "AppIdentity";
-  ObjectMapper objectMapper = new ObjectMapper();
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   protected void addOrUpdateIdentity(String key, Object value) {
     try {

@@ -9,24 +9,13 @@ import io.realm.annotations.PrimaryKey;
  * Created by zer0 on 6/4/17.
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class User extends RealmObject {
+@JsonIgnoreProperties(ignoreUnknown = true) public class User extends RealmObject {
 
-  @PrimaryKey Long id;
-
-  String userName;
+  @PrimaryKey String userName;
 
   String firstName;
 
   String lastName;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getUserName() {
     return userName;

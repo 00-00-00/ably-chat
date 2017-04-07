@@ -22,7 +22,7 @@ public class UserIdentity extends Identity {
   public void setSelf(User self) {
     this.self = self;
     addOrUpdateIdentity(SELF_OBJECT_KEY, self);
-    addOrUpdateIdentity(SELF_KEY, self.getId());
+    addOrUpdateIdentity(SELF_KEY, self.getUserName());
   }
 
   @Override protected void clear() {

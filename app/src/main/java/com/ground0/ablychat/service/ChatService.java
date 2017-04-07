@@ -35,7 +35,7 @@ public class ChatService extends BaseService {
   private void initAbly() throws AblyException {
     //if (getSelf() == null) return;
     AblyRealtime ablyRealtime = new AblyRealtime(Constants.ABLY_API_KEY);
-    Channel channel = ablyRealtime.channels.get("test_channel"/*getSelf().getId().toString()*/);
+    Channel channel = ablyRealtime.channels.get(getSelf().getUserName());
     channel.subscribe(message -> {
       Log.d(getClass().getSimpleName(), "Message received:" + message.data);
       try {
