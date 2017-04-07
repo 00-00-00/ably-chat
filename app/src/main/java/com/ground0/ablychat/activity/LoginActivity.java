@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.ground0.ablychat.MainActivity;
 import com.ground0.ablychat.R;
 import com.ground0.ablychat.core.components.BaseActivity;
 import com.ground0.ablychat.databinding.ActivityLoginBinding;
@@ -30,7 +29,8 @@ public class LoginActivity extends BaseActivity {
   }
 
   public void nextActivity() {
-    Intent intent = new Intent(this, MainActivity.class);
+    Intent intent = new Intent(this, ChatListActivity.class);
     startActivity(intent);
+    finish();
   }
 }

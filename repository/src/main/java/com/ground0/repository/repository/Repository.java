@@ -13,7 +13,7 @@ public interface Repository {
 
   public Observable<Long> saveMessage(Message message);
 
-  public Observable<RealmResults<Message>> getMessages(Long threadId);
+  public Observable<RealmResults<Message>> getMessages(String threadId);
 
-  public Observable<RealmResults<MessageThread>> getChatList(Long selfId);
+  public Observable<RealmResults<MessageThread>> getChatList(String selfId);
 }

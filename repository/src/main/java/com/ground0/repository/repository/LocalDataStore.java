@@ -41,7 +41,7 @@ public class LocalDataStore implements Repository {
     return Observable.just(message.getMessageId());
   }
 
-  public Observable<RealmResults<Message>> getMessages(Long threadId) {
+  public Observable<RealmResults<Message>> getMessages(String threadId) {
     Realm realm = Realm.getDefaultInstance();
 
     return realm.where(Message.class)
@@ -50,9 +50,10 @@ public class LocalDataStore implements Repository {
         .asObservable();
   }
 
-  @Override public Observable<RealmResults<MessageThread>> getChatList(Long selfId) {
+  @Override public Observable<RealmResults<MessageThread>> getChatList(String selfId) {
     Realm realm = Realm.getDefaultInstance();
     return realm.where(MessageThread.class)
+        .equalTo("fromUser.userName", selfId)
         .findAllSorted("lastMessage.receivedTimeStamp")
         .asObservable();
   }

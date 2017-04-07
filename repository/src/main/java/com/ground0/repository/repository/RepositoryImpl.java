@@ -30,11 +30,11 @@ public class RepositoryImpl implements Repository {
     return repository.saveMessage(message);
   }
 
-  @Override public Observable<RealmResults<Message>> getMessages(Long threadId) {
+  @Override public Observable<RealmResults<Message>> getMessages(String threadId) {
     return repository.getMessages(threadId);
   }
 
-  @Override public Observable<RealmResults<MessageThread>> getChatList(Long selfId) {
+  @Override public Observable<RealmResults<MessageThread>> getChatList(String selfId) {
     return repository.getChatList(selfId);
   }
 }
