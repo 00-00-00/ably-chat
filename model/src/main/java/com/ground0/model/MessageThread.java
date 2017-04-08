@@ -66,7 +66,6 @@ public class MessageThread extends RealmObject {
   public void readFrom(Message message) {
     setFromUser(message.getFromUser());
     setId(message.getThreadId());
-    setLastMessage(message);
     setToUser(message.getToUser());
   }
 }

@@ -10,13 +10,37 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackground"
+      android:clickable="true"
       android:onClick="@{viewModel::openDetail}"
+      android:padding="@dimen/view_margin_step2"
       >
     <TextView
+        android:id="@+id/i_thread_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/view_margin_step2"
+        android:layout_marginBottom="@dimen/view_margin_step1"
+        android:layout_marginLeft="@dimen/view_margin_step8"
+        android:fontFamily="sans-serif-light"
         android:text='@{viewModel.messageThread.toUser.userName}'
+        android:textColor="@color/primary_text"
+        android:textSize="18sp"
+        />
+    <TextView
+        android:id="@+id/i_thread_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/i_thread_username"
+        android:layout_below="@id/i_thread_username"
+        android:layout_marginBottom="@dimen/view_margin_step2"
+        android:text='@{viewModel.messageThread.lastMessage.message}'
+        android:textColor="@color/secondary_text"
+        />
+    <View
+        android:layout_width="@dimen/view_margin_step18"
+        android:layout_height="@dimen/divider_default"
+        android:layout_alignLeft="@+id/i_thread_message"
+        android:layout_below="@id/i_thread_message"
+        android:background="@color/divider"
         />
   </RelativeLayout>
 </layout>

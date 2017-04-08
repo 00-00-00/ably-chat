@@ -34,13 +34,22 @@ public class LocalDataStore implements Repository {
 
     MessageThread messageThread = new MessageThread();
     messageThread.readFrom(message);
-    //If message is not from self then store then store the address of thread from message; (i.e. inverted)
+    /*If message is not from self then store then store the address of thread from message; (i.e. inverted)
+    and add last message to thread
+     */
     if (!message.getFromUser().getUserName().equals(selfId)) {
       messageThread.setFromUser(message.getToUser());
       messageThread.setToUser(message.getFromUser());
+      messageThread.setLastMessage(message);
+    } else {
+      RealmResults<Message> results = realm.where(Message.class)
+          .equalTo("id", messageThread.getId())
+          .notEqualTo("fromUser.userName", selfId)
+          .findAllSorted("sendTimeStamp", Sort.DESCENDING);
+      if (results.size() != 0) messageThread.setLastMessage(results.get(0));
     }
-
     realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(messageThread));
+
     realm.close();
 
     return Observable.just(message.getMessageId());

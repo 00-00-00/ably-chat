@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <dimen name="divider_default">1dp</dimen>
+
   <dimen name="no_step">0dp</dimen>
   <dimen name="view_half_step">4dp</dimen>
   <dimen name="view_margin_step1">8dp</dimen>
