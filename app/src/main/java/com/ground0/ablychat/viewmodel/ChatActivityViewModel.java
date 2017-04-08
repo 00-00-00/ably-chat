@@ -61,6 +61,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
             user.setUserName(savedInstanceState.getString(ChatActivity.CHAT_ACTIVITY_TO_USERNAME));
           }
           this.toUser = user;
+          getActivity().initViews();
         });
     fetchMessages();
   }
@@ -83,6 +84,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
       this.messages.clear();
       this.messages.addAll(messages1);
       if (chatAdapter != null) chatAdapter.notifyDataSetChanged();
+      getActivity().scrollChatListToLast();
     });
   }
 
@@ -98,6 +100,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
     message.setReceivedTimeStamp(time); //Ack required for updating receivedTimeStamp
     pushMessage(message);
     this.message.set("");
+    getActivity().scrollChatListToLast();
   }
 
   private void pushMessage(Message message) {
@@ -122,7 +125,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
         }
 
         @Override public void onError(ErrorInfo reason) {
-
+          //Add cache and send later after implementing ACK
         }
       });
     } catch (AblyException e) {
@@ -138,5 +141,9 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
 
   public void setMessage(BindableString message) {
     this.message = message;
+  }
+
+  public User getToUser() {
+    return toUser;
   }
 }

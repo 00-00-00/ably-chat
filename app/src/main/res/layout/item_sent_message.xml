@@ -5,6 +5,7 @@
         name="message"
         type="com.ground0.model.Message"
         />
+    <import type="com.ground0.ablychat.util.TimeUtil"/>
   </data>
   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
@@ -29,13 +30,15 @@
       <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/view_margin_step1"
           android:layout_marginRight="@dimen/view_margin_step1"
           android:layout_marginTop="@dimen/view_margin_step1"
           android:background="@drawable/item_sent_background"
           android:gravity="right"
           android:orientation="vertical"
-          android:padding="@dimen/view_margin_step2"
+          android:paddingBottom="@dimen/view_margin_step1"
+          android:paddingLeft="@dimen/view_margin_step2"
+          android:paddingRight="@dimen/view_margin_step2"
+          android:paddingTop="@dimen/view_margin_step1"
           >
         <TextView
             android:layout_width="wrap_content"
@@ -43,6 +46,14 @@
             android:text='@{message.message}'
             />
       </LinearLayout>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/view_margin_step1"
+          android:layout_marginRight="@dimen/view_margin_step2"
+          android:text="@{TimeUtil.getTime(message.sendTimeStamp)}"
+          android:textSize="12sp"
+          />
     </LinearLayout>
 
   </LinearLayout>

@@ -42,4 +42,9 @@ public class ChatListActivityViewModel extends AbstractActivityViewModel<ChatLis
       if (adapter != null) adapter.notifyDataSetChanged();
     });
   }
+
+  public void logOut() {
+    getApplication().clearSelf();
+    getActivity().goToLoginActivity();
+  }
 }

@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +40,22 @@ public class ChatListActivity extends BaseActivity {
     startService(new Intent(this, ChatService.class));
   }
 
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_chat_activity, menu);
+    return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.m_logout:
+        viewModel.logOut();
+        return true;
+      default:
+        return false;
+    }
+  }
+
   @OnClick(R.id.a_chat_list_button) public void onStartChatClick(View view) {
     new MaterialDialog.Builder(this).title(R.string.start_chat)
         .input(getString(R.string.user_name), "", true, (dialog, input) -> {
@@ -63,5 +82,11 @@ public class ChatListActivity extends BaseActivity {
     intent.putExtra(ChatActivity.CHAT_ACTIVITY_TO_USERNAME, userName);
 
     startActivity(intent);
+  }
+
+  public void goToLoginActivity() {
+    Intent intent = new Intent(this, LoginActivity.class);
+    startActivity(intent);
+    finish();
   }
 }

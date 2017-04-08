@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by zer0 on 6/4/17.
@@ -43,5 +44,10 @@ import io.realm.annotations.PrimaryKey;
 
   @JsonIgnore public String getFullName() {
     return firstName + " " + lastName;
+  }
+
+  @JsonIgnore public String getName() {
+    return (StringUtils.isBlank(getFullName()) || "null null".equals(getFullName())) ? getUserName()
+        : getFullName();
   }
 }

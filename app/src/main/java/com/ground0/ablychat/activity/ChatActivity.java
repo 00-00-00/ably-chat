@@ -55,4 +55,17 @@ public class ChatActivity extends BaseActivity {
         new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     recyclerView.setAdapter(viewModel.getAdapter());
   }
+
+  public void initViews() {
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().setTitle(viewModel.getToUser().getName());
+    }
+  }
+
+  public void scrollChatListToLast() {
+    if (recyclerView != null && recyclerView.getLayoutManager() != null) {
+      recyclerView.getLayoutManager()
+          .scrollToPosition(recyclerView.getLayoutManager().getItemCount() - 1);
+    }
+  }
 }

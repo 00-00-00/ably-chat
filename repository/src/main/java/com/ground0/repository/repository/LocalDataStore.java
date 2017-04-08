@@ -43,7 +43,7 @@ public class LocalDataStore implements Repository {
       messageThread.setLastMessage(message);
     } else {
       RealmResults<Message> results = realm.where(Message.class)
-          .equalTo("id", messageThread.getId())
+          .equalTo("threadId", messageThread.getId())
           .notEqualTo("fromUser.userName", selfId)
           .findAllSorted("sendTimeStamp", Sort.DESCENDING);
       if (results.size() != 0) messageThread.setLastMessage(results.get(0));
@@ -67,6 +67,7 @@ public class LocalDataStore implements Repository {
   @Override public Observable<RealmResults<MessageThread>> getChatList(String selfId) {
     Realm realm = Realm.getDefaultInstance();
     return realm.where(MessageThread.class)
+        .equalTo("fromUser.userName", selfId)
         .distinct("id")
         .sort("lastMessage.receivedTimeStamp", Sort.DESCENDING)
         .asObservable();

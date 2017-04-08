@@ -30,6 +30,10 @@ public class BaseApplication extends Application {
     }
   }
 
+  public void clearSelf() {
+    if (userIdentity != null) userIdentity.clear();
+  }
+
   protected void initPrefs() {
     new Prefs.Builder().setContext(this)
         .setMode(ContextWrapper.MODE_PRIVATE)

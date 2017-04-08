@@ -6,4 +6,5 @@
   <string name="sign_in">Sign in</string>
   <string name="enter_message">Enter message</string>
   <string name="start_chat">Start chat</string>
+  <string name="log_out">Log out</string>
 </resources>
