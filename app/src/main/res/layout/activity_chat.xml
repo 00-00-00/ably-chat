@@ -7,6 +7,8 @@
         name="viewModel"
         type="com.ground0.ablychat.viewmodel.ChatActivityViewModel"
         />
+    <import type="android.view.View"/>
+    <import type="org.apache.commons.lang3.StringUtils"/>
   </data>
   <LinearLayout
       android:layout_width="match_parent"
@@ -32,24 +34,35 @@
           android:orientation="horizontal"
           >
         <android.support.v7.widget.AppCompatEditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/view_margin_step1"
             android:layout_marginLeft="@dimen/view_margin_step2"
             android:layout_marginRight="@dimen/view_margin_step1"
             android:layout_marginTop="@dimen/view_margin_step1"
-            android:layout_marginBottom="@dimen/view_margin_step1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/enter_message"
             app:binding='@{viewModel.message}'
             />
 
         <ImageButton
-            android:src="@drawable/ic_send_black_24dp"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:onClick='@{viewModel::sendMessage}'
-            android:text="Send"
+            android:src="@drawable/ic_send_black_24dp"
+            android:text="@string/send"
+            android:visibility='@{StringUtils.isBlank(viewModel.message.get()) ? View.GONE: View.VISIBLE}'
+            style="@style/Widget.AppCompat.Button.Borderless"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#00ffffff"
+            android:src="@drawable/ic_send_gray_24dp"
+            android:text="@string/send"
+            android:visibility='@{StringUtils.isNotBlank(viewModel.message.get()) ? View.GONE: View.VISIBLE}'
             style="@style/Widget.AppCompat.Button.Borderless"
             />
       </LinearLayout>

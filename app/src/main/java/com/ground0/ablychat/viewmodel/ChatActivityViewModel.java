@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ground0.ablychat.activity.ChatActivity;
 import com.ground0.ablychat.adapter.ChatAdapter;
 import com.ground0.ablychat.core.binding.BindableString;
+import com.ground0.ablychat.core.binding.BindableStringWithError;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
 import com.ground0.ablychat.util.Constants;
 import com.ground0.model.Message;
@@ -113,29 +114,31 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
       AblyRealtime ablyRealtime = new AblyRealtime(Constants.ABLY_API_KEY);
       Channel channel = ablyRealtime.channels.get(toUser.getUserName());
       String messageString = objectMapper.writeValueAsString(message);
-      channel.publish("message", messageString, new CompletionListener() {
-        @Override public void onSuccess() {
-          Log.d(getClass().getSimpleName(), "Message sent");
-          try {
-            repository.saveMessage(getApplication().getSelf().getUserName(),
-                objectMapper.readValue(messageString, Message.class))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                  Log.d(getClass().getSimpleName(), "Message saved");
-                });
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
+      repository.saveMessage(getApplication().getSelf().getUserName(),
+          objectMapper.readValue(messageString, Message.class))
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribeOn(AndroidSchedulers.mainThread())
+          .subscribe(aLong -> {
+            Log.d(getClass().getSimpleName(), "Message saved");
+            try {
+              channel.publish("message", messageString, new CompletionListener() {
+                @Override public void onSuccess() {
+                  Log.d(getClass().getSimpleName(), "Message sent");
+                }
 
-        @Override public void onError(ErrorInfo reason) {
-          //Add cache and send later after implementing ACK
-        }
-      });
-    } catch (AblyException e) {
-      e.printStackTrace();
+                @Override public void onError(ErrorInfo reason) {
+                  //Add cache and send later after implementing ACK
+                }
+              });
+            } catch (AblyException e) {
+              e.printStackTrace();
+            }
+          });
     } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (AblyException e) {
       e.printStackTrace();
     }
   }
@@ -144,7 +147,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
     return message;
   }
 
-  public void setMessage(BindableString message) {
+  public void setMessage(BindableStringWithError message) {
     this.message = message;
   }
 
