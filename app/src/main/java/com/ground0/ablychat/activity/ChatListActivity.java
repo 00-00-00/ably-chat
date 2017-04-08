@@ -12,6 +12,7 @@ import butterknife.OnClick;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ground0.ablychat.R;
 import com.ground0.ablychat.core.components.BaseActivity;
+import com.ground0.ablychat.service.ChatService;
 import com.ground0.ablychat.viewmodel.ChatListActivityViewModel;
 import com.ground0.model.MessageThread;
 
@@ -33,6 +34,7 @@ public class ChatListActivity extends BaseActivity {
     setContentView(R.layout.activity_chat_list);
     ButterKnife.bind(this);
     initRecyclerView();
+    startService(new Intent(this, ChatService.class));
   }
 
   @OnClick(R.id.a_chat_list_button) public void onStartChatClick(View view) {

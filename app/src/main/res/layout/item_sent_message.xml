@@ -21,20 +21,28 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/view_margin_step1"
-        android:layout_marginRight="@dimen/view_margin_step1"
-        android:layout_marginTop="@dimen/view_margin_step1"
         android:layout_weight="8"
-        android:background="@color/cardview_light_background"
         android:gravity="right"
         android:orientation="vertical"
-        android:padding="@dimen/view_margin_step2"
         >
-      <TextView
+
+      <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text='@{message.message}'
-          />
+          android:layout_marginBottom="@dimen/view_margin_step1"
+          android:layout_marginRight="@dimen/view_margin_step1"
+          android:layout_marginTop="@dimen/view_margin_step1"
+          android:background="@drawable/item_sent_background"
+          android:gravity="right"
+          android:orientation="vertical"
+          android:padding="@dimen/view_margin_step2"
+          >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{message.message}'
+            />
+      </LinearLayout>
     </LinearLayout>
 
   </LinearLayout>
