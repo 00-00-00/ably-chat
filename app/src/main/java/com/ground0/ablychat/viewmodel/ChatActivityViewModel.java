@@ -95,6 +95,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
         .setToUser(toUser)
         .setFromUser(getApplication().getSelf())
         .build();
+    message.setReceivedTimeStamp(time); //Ack required for updating receivedTimeStamp
     pushMessage(message);
     this.message.set("");
   }

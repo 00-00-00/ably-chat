@@ -7,6 +7,7 @@ import com.ground0.model.MessageThread;
 import com.ground0.model.User;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rx.Observable;
 
 /**
@@ -50,7 +51,7 @@ public class LocalDataStore implements Repository {
 
     return realm.where(Message.class)
         .equalTo("threadId", threadId)
-        .findAllSorted("receivedTimeStamp")
+        .findAllSorted("sendTimeStamp")
         .asObservable();
   }
 
@@ -58,7 +59,7 @@ public class LocalDataStore implements Repository {
     Realm realm = Realm.getDefaultInstance();
     return realm.where(MessageThread.class)
         .distinct("id")
-        .sort("lastMessage.receivedTimeStamp")
+        .sort("lastMessage.receivedTimeStamp", Sort.DESCENDING)
         .asObservable();
   }
 
