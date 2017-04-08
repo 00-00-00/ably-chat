@@ -32,6 +32,7 @@ public class LoginActivityViewModel extends AbstractActivityViewModel<LoginActiv
   public void signIn(@Nullable View view) {
     if (!userName.validate()) return;
 
+    user.setUserName(userName.get());
     if (StringUtils.isNotBlank(user.getUserName())) {
       if (StringUtils.isBlank(user.getFirstName()) && StringUtils.isBlank(user.getLastName())) {
         user.setFirstName("User");
