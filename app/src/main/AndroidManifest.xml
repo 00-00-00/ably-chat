@@ -32,7 +32,8 @@
 
     <service
         android:name=".service.ChatService"
-        android:exported="false"/>
+        android:exported="false">
+    </service>
 
   </application>
 

@@ -1,9 +1,11 @@
 package com.ground0.ablychat.viewmodel;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.view.View;
 import com.ground0.ablychat.activity.LoginActivity;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
+import com.ground0.ablychat.util.Constants;
 import com.ground0.model.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,6 +30,7 @@ public class LoginActivityViewModel extends AbstractActivityViewModel<LoginActiv
         user.setLastName("1");
       }
       getApplication().setSelf(user);
+      getApplication().sendBroadcast(new Intent(Constants.SELF_REFRESHED_ACTION));
       getActivity().nextActivity();
     }
   }

@@ -1,8 +1,10 @@
 package com.ground0.ablychat.viewmodel;
 
+import android.content.Intent;
 import com.ground0.ablychat.activity.ChatListActivity;
 import com.ground0.ablychat.adapter.ChatListRecyclerViewAdapter;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
+import com.ground0.ablychat.util.Constants;
 import com.ground0.model.MessageThread;
 import com.ground0.repository.repository.Repository;
 import com.ground0.repository.repository.RepositoryImpl;
@@ -46,5 +48,6 @@ public class ChatListActivityViewModel extends AbstractActivityViewModel<ChatLis
   public void logOut() {
     getApplication().clearSelf();
     getActivity().goToLoginActivity();
+    getApplication().sendBroadcast(new Intent(Constants.SELF_CLEARED_ACTION));
   }
 }
