@@ -24,6 +24,7 @@ import io.ably.lib.types.ErrorInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -41,6 +42,8 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
 
   private List<Message> messages = new ArrayList<>();
   private BindableString message = new BindableString();
+
+  Subscription subscription;
 
   @Override public void afterRegister() {
     super.afterRegister();
@@ -62,6 +65,7 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
           }
           this.toUser = user;
           getActivity().initViews();
+          fetchMessages();
         });
     fetchMessages();
   }
@@ -80,7 +84,8 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
   }
 
   private void fetchMessages() {
-    repository.getMessages(threadId).subscribe(messages1 -> {
+    if (subscription != null && !subscription.isUnsubscribed()) subscription.unsubscribe();
+    subscription = repository.getMessages(threadId).subscribe(messages1 -> {
       this.messages.clear();
       this.messages.addAll(messages1);
       if (chatAdapter != null) chatAdapter.notifyDataSetChanged();

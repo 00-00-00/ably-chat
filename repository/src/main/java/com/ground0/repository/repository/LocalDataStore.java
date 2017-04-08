@@ -34,7 +34,7 @@ public class LocalDataStore implements Repository {
 
     MessageThread messageThread = new MessageThread();
     messageThread.readFrom(message);
-    /*If message is not from self then store then store the address of thread from message; (i.e. inverted)
+    /*If message is not from self then store the address of thread from message; (i.e. inverted)
     and add last message to thread
      */
     if (!message.getFromUser().getUserName().equals(selfId)) {

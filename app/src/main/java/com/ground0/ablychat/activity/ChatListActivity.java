@@ -61,8 +61,8 @@ public class ChatListActivity extends BaseActivity {
         .input(getString(R.string.user_name), "", true, (dialog, input) -> {
           Intent intent = new Intent(this, ChatActivity.class);
           intent.putExtra(ChatActivity.CHAT_ACTIVITY_THREAD_ID,
-              MessageThread.generateId(getBaseApplication().getSelf().getUserName(),
-                  input.toString()));
+              MessageThread.generateId(input.toString(),
+                  getBaseApplication().getSelf().getUserName()));
           intent.putExtra(ChatActivity.CHAT_ACTIVITY_TO_USERNAME, input.toString());
           startActivity(intent);
         })
