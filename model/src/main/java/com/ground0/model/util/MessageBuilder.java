@@ -1,4 +1,7 @@
-package com.ground0.model;
+package com.ground0.model.util;
+
+import com.ground0.model.Message;
+import com.ground0.model.User;
 
 /**
  * Created by zer0 on 7/4/17.
@@ -9,6 +12,7 @@ public class MessageBuilder {
 
   public MessageBuilder() {
     this.message = new Message();
+    this.message.setState(Message.MESSAGE_STAT_SENDING);
   }
 
   public MessageBuilder setMessageId(Long messageId) {

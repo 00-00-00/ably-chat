@@ -12,7 +12,7 @@ import com.ground0.ablychat.core.binding.BindableStringWithError;
 import com.ground0.ablychat.core.viewmodel.AbstractActivityViewModel;
 import com.ground0.ablychat.util.Constants;
 import com.ground0.model.Message;
-import com.ground0.model.MessageBuilder;
+import com.ground0.model.util.MessageBuilder;
 import com.ground0.model.MessageThread;
 import com.ground0.model.User;
 import com.ground0.repository.repository.Repository;
@@ -104,15 +104,13 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
         .setFromUser(getApplication().getSelf())
         .build();
     message.setReceivedTimeStamp(time); //Ack required for updating receivedTimeStamp
-    pushMessage(message);
+    saveMessage(message, this::pushMessage);
     this.message.set("");
     getActivity().scrollChatListToLast();
   }
 
-  private void pushMessage(Message message) {
+  private void saveMessage(Message message, Callback callback) {
     try {
-      AblyRealtime ablyRealtime = new AblyRealtime(Constants.ABLY_API_KEY);
-      Channel channel = ablyRealtime.channels.get(toUser.getUserName());
       String messageString = objectMapper.writeValueAsString(message);
       repository.saveMessage(getApplication().getSelf().getUserName(),
           objectMapper.readValue(messageString, Message.class))
@@ -120,24 +118,46 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
           .subscribeOn(AndroidSchedulers.mainThread())
           .subscribe(aLong -> {
             Log.d(getClass().getSimpleName(), "Message saved");
-            try {
-              channel.publish("message", messageString, new CompletionListener() {
-                @Override public void onSuccess() {
-                  Log.d(getClass().getSimpleName(), "Message sent");
-                }
-
-                @Override public void onError(ErrorInfo reason) {
-                  //Add cache and send later after implementing ACK
-                }
-              });
-            } catch (AblyException e) {
-              e.printStackTrace();
+            if (!Message.MESSAGE_STAT_SENT.equals(message.getState())) {
+              if (callback == null) return;
+              callback.onSuccess(messageString);
             }
           });
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
+    }
+  }
+
+  private void pushMessage(String messageString) {
+    try {
+      AblyRealtime ablyRealtime = new AblyRealtime(Constants.ABLY_API_KEY);
+      Channel channel = ablyRealtime.channels.get(toUser.getUserName());
+      channel.publish("message", messageString, new CompletionListener() {
+        @Override public void onSuccess() {
+          try {
+            Log.d(getClass().getSimpleName(), "Message sent");
+            Message message = objectMapper.readValue(messageString, Message.class);
+            message.setState(Message.MESSAGE_STAT_SENT);
+            saveMessage(message, null);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
+        @Override public void onError(ErrorInfo reason) {
+          //Add cache and send later after implementing ACK
+          try {
+            Log.d(getClass().getSimpleName(), "Message send failed");
+            Message message = objectMapper.readValue(messageString, Message.class);
+            message.setState(Message.MESSAGE_STAT_FAILED);
+            saveMessage(message, null);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      });
     } catch (AblyException e) {
       e.printStackTrace();
     }
@@ -153,5 +173,9 @@ public class ChatActivityViewModel extends AbstractActivityViewModel<ChatActivit
 
   public User getToUser() {
     return toUser;
+  }
+
+  public interface Callback {
+    void onSuccess(String messageString);
   }
 }

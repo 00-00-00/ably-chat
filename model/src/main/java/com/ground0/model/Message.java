@@ -1,15 +1,28 @@
 package com.ground0.model;
 
+import android.support.annotation.StringDef;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by zer0 on 6/4/17.
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Message extends RealmObject {
+@JsonIgnoreProperties(ignoreUnknown = true) public class Message extends RealmObject {
+
+  @Retention(RetentionPolicy.SOURCE)
+  @StringDef({ MESSAGE_STAT_SENT, MESSAGE_STAT_SENDING, MESSAGE_STAT_FAILED })
+  public @interface MessageState {
+  }
+
+  @JsonIgnore @Ignore public static final String MESSAGE_STAT_SENDING = "MESSAGE_NOT_SEND";
+  @JsonIgnore @Ignore public static final String MESSAGE_STAT_SENT = "MESSAGE_SENT";
+  @JsonIgnore @Ignore public static final String MESSAGE_STAT_FAILED = "MESSAGE_SEND_FAILED";
 
   @PrimaryKey Long messageId;
 
@@ -24,6 +37,8 @@ public class Message extends RealmObject {
   Long sendTimeStamp;
 
   Long receivedTimeStamp;
+
+  @MessageState String state;
 
   public String getThreadId() {
     return threadId;
@@ -79,5 +94,13 @@ public class Message extends RealmObject {
 
   public void setReceivedTimeStamp(Long receivedTimeStamp) {
     this.receivedTimeStamp = receivedTimeStamp;
+  }
+
+  @MessageState public String getState() {
+    return state;
+  }
+
+  public void setState(@MessageState String state) {
+    this.state = state;
   }
 }
