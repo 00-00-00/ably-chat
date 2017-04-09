@@ -41,6 +41,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/user_name"
+              android:imeOptions="actionNext"
+              android:inputType="text"
               android:maxLines="1"
               app:binding="@{viewModel.userName}"
               />
@@ -54,6 +56,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/first_name"
+              android:imeOptions="actionNext"
+              android:inputType="text"
               android:maxLines="1"
               android:text="@={viewModel.user.firstName}"
               />
@@ -64,9 +68,13 @@
             android:layout_marginBottom="@dimen/view_margin_step1"
             >
           <android.support.design.widget.TextInputEditText
+              android:id="@+id/a_login_last_name"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/last_name"
+              android:imeActionId="@+id/action_done"
+              android:imeOptions="actionDone"
+              android:inputType="text"
               android:maxLines="1"
               android:text="@={viewModel.user.lastName}"
               />

@@ -11,6 +11,7 @@
     <import type="org.apache.commons.lang3.StringUtils"/>
   </data>
   <LinearLayout
+      android:id="@+id/a_chat_top_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"

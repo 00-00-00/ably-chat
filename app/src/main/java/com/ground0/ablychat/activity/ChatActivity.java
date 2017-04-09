@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ground0.ablychat.R;
 import com.ground0.ablychat.core.components.BaseActivity;
 import com.ground0.ablychat.databinding.ActivityChatBinding;
+import com.ground0.ablychat.util.ScrollCallbackGlobalLayoutListener;
 import com.ground0.ablychat.viewmodel.ChatActivityViewModel;
 
 /**
@@ -26,6 +28,7 @@ public class ChatActivity extends BaseActivity {
       "com.ground0.ablychat.chatactivity_to_thread_id";
 
   @BindView(R.id.a_chat_recycler) RecyclerView recyclerView;
+  @BindView(R.id.a_chat_top_view) View topView;
 
   @Override public void registerViewModel() {
     viewModel.register(this);
@@ -38,6 +41,7 @@ public class ChatActivity extends BaseActivity {
     binding.setViewModel(viewModel);
     ButterKnife.bind(this);
     initRecyclerView();
+    initKeyboardListner();
   }
 
   @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -60,6 +64,12 @@ public class ChatActivity extends BaseActivity {
     if (getSupportActionBar() != null) {
       getSupportActionBar().setTitle(viewModel.getToUser().getName());
     }
+  }
+
+  private void initKeyboardListner() {
+    topView.getViewTreeObserver()
+        .addOnGlobalLayoutListener(
+            new ScrollCallbackGlobalLayoutListener(topView, this::scrollChatListToLast));
   }
 
   public void scrollChatListToLast() {
